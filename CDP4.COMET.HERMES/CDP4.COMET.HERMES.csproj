@@ -4,7 +4,7 @@
         <Version>0.1.0</Version>
         <LangVersion>latest</LangVersion>
         <Title>AP 1067</Title>
-        <Description>A Blazor web application that handles the workflow of the AP 1067</Description>
+        <Description>A Blazor web application that allows a user to synchronize data between E-TM-10-25 data sources</Description>
         <RepositoryType>Git</RepositoryType>
         <RepositoryUrl>https://github.com/RHEAGROUP/CDP4-COMET-HERMES</RepositoryUrl>
         <ImplicitUsings>enable</ImplicitUsings>
