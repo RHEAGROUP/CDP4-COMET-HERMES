@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Version>0.1.0</Version>
+        <Version>0.0.1</Version>
         <LangVersion>latest</LangVersion>
         <Title>CDP4-COMET HERMES</Title>
         <Description>A Blazor web application that allows a user to synchronize data between E-TM-10-25 data sources</Description>
