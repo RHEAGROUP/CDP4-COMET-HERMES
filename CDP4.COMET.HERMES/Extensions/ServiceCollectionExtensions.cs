@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Error.cshtml.cs" company="RHEA System S.A.">
+// <copyright file="ServiceCollectionExtensions.cs" company="RHEA System S.A.">
 // 
 //    Copyright (c) 2023 RHEA System S.A.
 // 
@@ -17,38 +17,32 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace CDP4.COMET.HERMES.Pages
+namespace CDP4.COMET.HERMES.Extensions
 {
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using CDP4.COMET.HERMES.Services.VersionService;
+    using CDP4.COMET.HERMES.ViewModels.Pages;
 
     /// <summary>
-    /// Data model that provide information about request when an error occurs
+    /// Extension class for the <see cref="IServiceCollection"/>
     /// </summary>
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    [IgnoreAntiforgeryToken]
-    [ExcludeFromCodeCoverage]
-    public class ErrorModel : PageModel
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Gets or sets the request id
+        /// Register required services for this application
         /// </summary>
-        public string RequestId { get; set; }
-
-        /// <summary>
-        /// Gets the assert the the <see cref="RequestId" /> should be shown
-        /// </summary>
-        public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
-
-        /// <summary>
-        /// Sets the <see cref="RequestId" /> based on context
-        /// </summary>
-        public void OnGet()
+        /// <param name="services">The <see cref="IServiceCollection"/></param>
+        public static void RegisterHermesServices(this IServiceCollection services)
         {
-            this.RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier;
+            services.AddSingleton<IVersionService, VersionService>();
+        }
+
+        /// <summary>
+        /// Register required view model for this application
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/></param>
+        public static void RegisterHermesViewModels(this IServiceCollection services)
+        {
+            services.AddTransient<IIndexViewModel, IndexViewModel>();
         }
     }
 }

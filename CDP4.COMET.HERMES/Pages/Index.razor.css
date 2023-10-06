@@ -1,0 +1,13 @@
+﻿.index-title {
+    margin-top: 5vh;
+}
+
+.full-page {
+    height: 90vh;
+    display: block;
+}
+
+#description {
+    margin-top: 5vh;
+    width: 50vh;
+}
