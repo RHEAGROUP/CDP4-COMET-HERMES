@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Error.cshtml.cs" company="RHEA System S.A.">
+// <copyright file="Index.razor.cs" company="RHEA System S.A.">
 // 
 //    Copyright (c) 2023 RHEA System S.A.
 // 
@@ -19,36 +19,19 @@
 
 namespace CDP4.COMET.HERMES.Pages
 {
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+    using CDP4.COMET.HERMES.ViewModels.Pages;
 
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.Components;
 
     /// <summary>
-    /// Data model that provide information about request when an error occurs
+    /// Home page of the application
     /// </summary>
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    [IgnoreAntiforgeryToken]
-    [ExcludeFromCodeCoverage]
-    public class ErrorModel : PageModel
+    public partial class Index
     {
         /// <summary>
-        /// Gets or sets the request id
+        /// Gets or sets the INJECTED <see cref="IIndexViewModel"/>
         /// </summary>
-        public string RequestId { get; set; }
-
-        /// <summary>
-        /// Gets the assert the the <see cref="RequestId" /> should be shown
-        /// </summary>
-        public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
-
-        /// <summary>
-        /// Sets the <see cref="RequestId" /> based on context
-        /// </summary>
-        public void OnGet()
-        {
-            this.RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier;
-        }
+        [Inject]
+        public IIndexViewModel ViewModel { get; set; }
     }
 }

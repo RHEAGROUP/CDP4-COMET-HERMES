@@ -20,12 +20,16 @@
 namespace CDP4.COMET.HERMES
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+
+    using CDP4.COMET.HERMES.Extensions;
 
     using DevExpress.Blazor;
 
     /// <summary>
     /// Starting class of the application
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         /// <summary>
@@ -41,6 +45,9 @@ namespace CDP4.COMET.HERMES
             builder.Services.AddServerSideBlazor();
             builder.Services.AddDevExpressBlazor(x => x.SizeMode = SizeMode.Medium);
             builder.Services.AddAuthenticationCore();
+
+            builder.Services.RegisterHermesServices();
+            builder.Services.RegisterHermesViewModels();
 
             builder.Logging.SetMinimumLevel(Debugger.IsAttached ? LogLevel.Debug : LogLevel.Warning);
 

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Error.cshtml.cs" company="RHEA System S.A.">
+// <copyright file="IndexViewModel.cs" company="RHEA System S.A.">
 // 
 //    Copyright (c) 2023 RHEA System S.A.
 // 
@@ -17,38 +17,27 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace CDP4.COMET.HERMES.Pages
+namespace CDP4.COMET.HERMES.ViewModels.Pages
 {
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using CDP4.COMET.HERMES.Services.VersionService;
 
     /// <summary>
-    /// Data model that provide information about request when an error occurs
+    /// ViewModel that handle behavior of the Index page
     /// </summary>
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    [IgnoreAntiforgeryToken]
-    [ExcludeFromCodeCoverage]
-    public class ErrorModel : PageModel
+    public class IndexViewModel: IIndexViewModel
     {
         /// <summary>
-        /// Gets or sets the request id
+        /// Gets the <see cref="IVersionService"/>
         /// </summary>
-        public string RequestId { get; set; }
+        public IVersionService VersionService { get; }
 
         /// <summary>
-        /// Gets the assert the the <see cref="RequestId" /> should be shown
+        /// Initializes a new instance of the <see cref="IndexViewModel" /> class.
         /// </summary>
-        public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
-
-        /// <summary>
-        /// Sets the <see cref="RequestId" /> based on context
-        /// </summary>
-        public void OnGet()
+        /// <param name="versionService">The <see cref="IVersionService"/></param>
+        public IndexViewModel(IVersionService versionService)
         {
-            this.RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier;
+            this.VersionService = versionService;
         }
     }
 }
