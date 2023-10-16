@@ -1,0 +1,35 @@
+﻿@using CDP4Common.CommonData
+@using CDP4.COMET.HERMES.Extensions.DTO
+@inherits CDP4.COMET.HERMES.Components.Shared.DisposableComponent
+@namespace CDP4.COMET.HERMES.Components.Server
+
+<div>
+    <DxCheckBox @bind-Checked="@(this.ShowAllResults)">Show all results: </DxCheckBox>
+</div>
+<DxTreeView>
+    <Nodes>
+        <DxTreeViewNode Name="SiteDirectory" Expanded Text="Site Directory">
+            <Nodes>
+                @foreach (var siteDirectoryData in this.GetData())
+                {
+                    <DxTreeViewNode Text="@($"{siteDirectoryData.Key} ({this.GetDiffValues(siteDirectoryData.Value)})")">
+                        <Nodes>
+                            <DxTreeViewNode Expanded>
+                                <Template>
+                                    <ul>
+                                        @foreach (var diffItem in siteDirectoryData.Value.OrderBy(x => x.Name))
+                                        {
+                                            <li class="source-data @(diffItem.GetDiffItemDtoCssClassByDifferenceLevel())">
+                                                @(diffItem.Name)
+                                            </li>
+                                        }
+                                    </ul>
+                                </Template>
+                            </DxTreeViewNode>
+                        </Nodes>
+                    </DxTreeViewNode>
+                }
+            </Nodes>
+        </DxTreeViewNode>
+    </Nodes>
+</DxTreeView>

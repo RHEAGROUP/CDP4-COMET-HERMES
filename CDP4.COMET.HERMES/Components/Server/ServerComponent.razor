@@ -1,0 +1,69 @@
+@namespace CDP4.COMET.HERMES.Components.Server
+@using CDP4.COMET.HERMES.Models.Enums
+@using CDP4Common.SiteDirectoryData
+@using DevExpress.Blazor.Internal
+@using System.Collections
+@using CDP4Common.CommonData
+@inherits CDP4.COMET.HERMES.Components.Shared.DisposableComponent
+
+<div>
+    @if (this.SyncViewModel.SourceSession != null && this.SyncViewModel.TargetSession == null)
+    {
+        <span>You are currently connected to source: @this.SyncViewModel.SourceSession.DataSourceUri</span>
+    }
+    else if (this.SyncViewModel.SourceSession == null && this.SyncViewModel.TargetSession != null)
+    {
+        <span>You are currently connected to target: @this.SyncViewModel.TargetSession.DataSourceUri</span>
+    }
+    else if (this.SyncViewModel.SourceSession != null && this.SyncViewModel.TargetSession != null)
+    {
+        <span>You are currently connected to source @this.SyncViewModel.SourceSession.DataSourceUri and target @this.SyncViewModel.TargetSession.DataSourceUri</span>
+    }
+    else
+    {
+        <span>Please connect to a source server or upload a zip file.</span>
+    }
+</div>
+
+<div class="server">
+    @if (this.SyncViewModel.CurrentSyncStep is SyncStep.Authentication)
+    {
+        <div class="data">
+            @if (this.SyncViewModel.SourceSession != null)
+            {
+                <span>Awaiting authentication on the target server..</span>
+            }
+            else
+            {
+                <h5>Login onto your source server</h5>
+                <ServerAuthenticationComponent OnAuthenticate="@(session => { this.SyncViewModel.SourceSession = session; if (this.SyncViewModel.TargetSession != null) { this.SyncViewModel.CurrentSyncStep++; }; this.StateHasChanged(); })"/>
+            }
+        </div>
+        <div class="data">
+            @if (this.SyncViewModel.TargetSession != null)
+            {
+                <span>Awaiting authentication on the source server..</span>
+            }
+            else
+            {
+                <h5>Login onto your target server</h5>
+                <ServerAuthenticationComponent OnAuthenticate="@(session => { this.SyncViewModel.TargetSession = session; if (this.SyncViewModel.SourceSession != null) { this.SyncViewModel.CurrentSyncStep++; }; this.StateHasChanged(); })"/>
+            }
+        </div>
+    }
+    
+    @if (this.SyncViewModel.CurrentSyncStep is SyncStep.DataSourcePicking)
+    {
+        <div class="data">
+            <h5>Source server data</h5>
+            <SessionDataComponent Session="@(this.SyncViewModel.SourceSession)" OnClick="(thing) => { this.OnAdd(thing); }"/>
+        </div>
+        <div class="data">
+            <ServerDiffComponent SourceThings="@(this.GetThingsFromSiteDirectory(this.SyncViewModel.SourceSession.RetrieveSiteDirectory()))" TargetThings="@(this.GetThingsFromSiteDirectory(this.SyncViewModel.TargetSession.RetrieveSiteDirectory()))"/>
+        </div>
+        <div class="data">
+            <h5>Target server data</h5>
+            <SessionDataComponent Session="@(this.SyncViewModel.TargetSession)"/>
+        </div>
+    }
+</div>

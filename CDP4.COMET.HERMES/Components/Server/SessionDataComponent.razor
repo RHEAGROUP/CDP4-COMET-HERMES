@@ -1,0 +1,41 @@
+﻿@namespace CDP4.COMET.HERMES.Components.Server
+@inherits CDP4.COMET.HERMES.Components.Shared.DisposableComponent
+
+
+<div>
+    <DxTreeView>
+        <Nodes>
+            <DxTreeViewNode Name="SiteDirectory" Text="Site Directory" Expanded>
+                <Nodes>
+                    <SourceDataComponent Title="Domains of Expertise"
+                                         Source="@this.currentSessionSiteDirectory.Domain"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Organizations"
+                                         Source="@this.currentSessionSiteDirectory.Organization"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Natural Languages"
+                                         Source="@this.currentSessionSiteDirectory.NaturalLanguage"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Domain Groups"
+                                         Source="@this.currentSessionSiteDirectory.DomainGroup"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Models"
+                                         Source="@this.currentSessionSiteDirectory.Model"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Participant Roles"
+                                         Source="@this.currentSessionSiteDirectory.ParticipantRole"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Persons"
+                                         Source="@this.currentSessionSiteDirectory.Person"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Person Roles"
+                                         Source="@this.currentSessionSiteDirectory.PersonRole"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                    <SourceDataComponent Title="Site Reference Data Library"
+                                         Source="@this.currentSessionSiteDirectory.SiteReferenceDataLibrary"
+                                         OnClick="(thing) => { this.OnClick.Invoke(thing); this.StateHasChanged(); }"/>
+                </Nodes>
+            </DxTreeViewNode>
+        </Nodes>
+    </DxTreeView>
+</div>

@@ -37,3 +37,52 @@ html, body {
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
+
+.content {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.content .data-selection {
+    display: flex;
+    flex-direction: column;
+}
+
+.content .data-selection .server {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.content .data-selection .server .data {
+    border: 1px solid black;
+    padding: 10px;
+    width: 500px;
+}
+
+.content .data-selection .server .data .source-data {
+    cursor: pointer;
+    user-select: none;
+}
+
+.content .data-selection .server .data .equal {
+    color: #ab4343;
+}
+
+.content .data-selection .server .data .partially-different {
+    color: #a8a84f;
+}
+
+.content .data-selection .server .data .completely-different {
+    color: #52a84f;
+}
+
+.content .data-selection .server .data .source-data:hover {
+    text-decoration: underline;
+}
+
+.continue-btn-container {
+    display: flex;
+    justify-content: end;
+}
