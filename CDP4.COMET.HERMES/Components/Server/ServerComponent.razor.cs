@@ -110,10 +110,11 @@ namespace CDP4.COMET.HERMES.Components.Server
             this.StateHasChanged();
         }
 
-        private async Task OnCommitClick()
+        private Task OnCommitClick()
         {
-            await this.SyncViewModel.Commit();
+            //TODO: Changes commit logic
             this.StateHasChanged();
+            return Task.CompletedTask;
         }
     }
 }
