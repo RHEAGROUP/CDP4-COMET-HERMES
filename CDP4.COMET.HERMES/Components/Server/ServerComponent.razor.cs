@@ -57,8 +57,12 @@ namespace CDP4.COMET.HERMES.Components.Server
             this.SyncViewModel.SelectedSiteDirectory = new();
         }
 
-        private IEnumerable<IEnumerable<Thing>> GetThingsFromSiteDirectory(SiteDirectory siteDirectory)
+        private static IEnumerable<IEnumerable<Thing>> GetThingsFromSiteDirectory(SiteDirectory siteDirectory)
         {
+            if (siteDirectory == null)
+            {
+                return Enumerable.Empty<IEnumerable<Thing>>();
+            }
             return siteDirectory.ContainerLists.Select(x => (IEnumerable<Thing>)x);
         }
 

@@ -37,6 +37,7 @@ namespace CDP4.COMET.HERMES.Components.Shared
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

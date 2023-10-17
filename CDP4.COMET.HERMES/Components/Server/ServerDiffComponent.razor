@@ -12,7 +12,7 @@
             <Nodes>
                 @foreach (var siteDirectoryData in this.GetData())
                 {
-                    <DxTreeViewNode Text="@($"{siteDirectoryData.Key} ({this.GetDiffValues(siteDirectoryData.Value)})")">
+                    <DxTreeViewNode Text="@($"{siteDirectoryData.Key} ({GetDiffValues(siteDirectoryData.Value)})")">
                         <Nodes>
                             <DxTreeViewNode Expanded>
                                 <Template>
