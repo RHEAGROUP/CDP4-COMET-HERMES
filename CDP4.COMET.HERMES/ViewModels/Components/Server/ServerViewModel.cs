@@ -28,8 +28,6 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
 
     using CDP4ServicesDal;
 
-    using DevExpress.ReportServer.ServiceModel.Client;
-
     using global::COMET.Web.Common.Model.DTO;
 
     using ReactiveUI;
@@ -55,7 +53,13 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
         /// Gets or sets the <see cref="ISession" />
         /// </summary>
         public ISession Session { get; set; }
-        
+
+        public ISession GetSessionData(AuthenticationDto authenticationDto)
+        {
+            var credentials = new Credentials(authenticationDto.UserName, authenticationDto.Password, new Uri(authenticationDto.SourceAddress)); 
+            return new Session(new CdpServicesDal(), credentials);
+        }
+
         /// <summary>
         /// Creates a new session with the given credentials
         /// </summary>
@@ -67,8 +71,7 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
                 return;
             }
 
-            var credentials = new Credentials(this.AuthenticationDto.UserName, this.AuthenticationDto.Password, new Uri(this.AuthenticationDto.SourceAddress));
-            this.Session = new Session(new CdpServicesDal(), credentials);
+            this.Session ??= this.GetSessionData(this.AuthenticationDto);
 
             try
             {
@@ -78,10 +81,12 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
             catch (DalReadException)
             {
                 this.AuthenticationState =  AuthenticationStateKind.Fail;
+                this.Session = null;
             }
             catch (HttpRequestException)
             {
                 this.AuthenticationState =  AuthenticationStateKind.ServerFail;
+                this.Session = null;
             }
         }
     }

@@ -23,12 +23,11 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server.Interfaces
 
     using CDP4Dal;
 
-    using DevExpress.ReportServer.ServiceModel.Client;
-
     using global::COMET.Web.Common.Model.DTO;
 
     public interface IServerViewModel
     {
+        ISession GetSessionData(AuthenticationDto authenticationDto);
         Task Authenticate();
         AuthenticationDto AuthenticationDto { get; set; }
         AuthenticationStateKind? AuthenticationState { get; set; }

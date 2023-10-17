@@ -113,12 +113,5 @@ namespace CDP4.COMET.HERMES.Components.Server
 
             this.StateHasChanged();
         }
-
-        private Task OnCommitClick()
-        {
-            //TODO: Changes commit logic
-            this.StateHasChanged();
-            return Task.CompletedTask;
-        }
     }
 }

@@ -54,7 +54,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// <summary>
         /// The dictionary of focus status from the form fields
         /// </summary>
-        private Dictionary<string, bool> FieldsFocusedStatus { get; set; }
+        public Dictionary<string, bool> FieldsFocusedStatus { get; set; }
 
         /// <summary>
         /// The text of the login button
@@ -64,7 +64,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// <summary>
         /// An error message to display after a login failure
         /// </summary>
-        private string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
 
         /// <summary>
         /// Value indicating if the login button is enabled or not
@@ -141,7 +141,7 @@ namespace CDP4.COMET.HERMES.Components.Server
 
             if (this.ViewModel.Session != null)
             {
-                this.OnAuthenticate.Invoke(this.ViewModel.Session);
+                this.OnAuthenticate?.Invoke(this.ViewModel.Session);
             }
         }
     }
