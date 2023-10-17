@@ -111,9 +111,8 @@ namespace CDP4.COMET.HERMES.Components.Server
         {
             var dict = new Dictionary<string, IEnumerable<DiffItemDto>>();
 
-            foreach (var targetThing in this.TargetThings)
+            foreach (var target in this.TargetThings)
             {
-                var target = targetThing.ToList();
                 var targetType = target.GetType();
                 var source = this.SourceThings.FirstOrDefault(x => x.GetType() == targetType)?.ToList() ?? new List<Thing>();
 
@@ -192,9 +191,8 @@ namespace CDP4.COMET.HERMES.Components.Server
         {
             var dict = new Dictionary<string, IEnumerable<DiffItemDto>>();
             
-            foreach (var sourceThing in this.SourceThings)
+            foreach (var source in this.SourceThings)
             {
-                var source = sourceThing.ToList();
                 var sourceType = source.GetType();
                 var target = this.TargetThings.Select(x => x).FirstOrDefault(x => x.GetType() == sourceType)?.ToList();
                 
