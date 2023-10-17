@@ -57,61 +57,13 @@ namespace CDP4.COMET.HERMES.Components.Server
             this.SyncViewModel.SelectedSiteDirectory = new();
         }
 
-        private static IEnumerable<IEnumerable<Thing>> GetThingsFromSiteDirectory(SiteDirectory siteDirectory)
+        public static IEnumerable<IEnumerable<Thing>> GetThingsFromSiteDirectory(SiteDirectory siteDirectory)
         {
             if (siteDirectory == null)
             {
                 return Enumerable.Empty<IEnumerable<Thing>>();
             }
             return siteDirectory.ContainerLists.Select(x => (IEnumerable<Thing>)x);
-        }
-
-        /// <summary>
-        /// Adds a thing to the site directory depending on their type
-        /// </summary>
-        /// <param name="thing">A thing to add to the selection.</param>
-        public void OnAdd(Thing thing)
-        {
-            var thingType = thing.GetType();
-
-            if (thingType == typeof(DomainOfExpertise))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.Domain.Add((DomainOfExpertise)thing);
-            }
-            else if (thingType == typeof(Organization))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.Organization.Add((Organization)thing);
-            }
-            else if (thingType == typeof(NaturalLanguage))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.NaturalLanguage.Add((NaturalLanguage)thing);
-            }
-            else if (thingType == typeof(DomainOfExpertiseGroup))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.DomainGroup.Add((DomainOfExpertiseGroup)thing);
-            }
-            else if (thingType == typeof(EngineeringModelSetup))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.Model.Add((EngineeringModelSetup)thing);
-            }
-            else if (thingType == typeof(ParticipantRole))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.ParticipantRole.Add((ParticipantRole)thing);
-            }
-            else if (thingType == typeof(Person))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.Person.Add((Person)thing);
-            }
-            else if (thingType == typeof(PersonRole))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.PersonRole.Add((PersonRole)thing);
-            }
-            else if (thingType == typeof(SiteReferenceDataLibrary))
-            {
-                this.SyncViewModel.SelectedSiteDirectory.SiteReferenceDataLibrary.Add((SiteReferenceDataLibrary)thing);
-            }
-
-            this.StateHasChanged();
         }
     }
 }

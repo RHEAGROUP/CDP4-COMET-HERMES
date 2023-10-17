@@ -56,7 +56,7 @@
     {
         <div class="data">
             <h5>Source server data</h5>
-            <SessionDataComponent Session="@(this.SyncViewModel.SourceSession)" OnClick="(thing) => { this.OnAdd(thing); }"/>
+            <SessionDataComponent Session="@(this.SyncViewModel.SourceSession)"/>
         </div>
         <div class="data">
             <ServerDiffComponent SourceThings="@(GetThingsFromSiteDirectory(this.SyncViewModel?.SourceSession?.RetrieveSiteDirectory()))" TargetThings="@(GetThingsFromSiteDirectory(this.SyncViewModel?.TargetSession?.RetrieveSiteDirectory()))"/>

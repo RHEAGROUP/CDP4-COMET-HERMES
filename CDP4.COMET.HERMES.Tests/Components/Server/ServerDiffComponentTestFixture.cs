@@ -23,10 +23,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
 
     using CDP4.COMET.HERMES.Components.Server;
 
-    using CDP4Common.CommonData;
     using CDP4Common.SiteDirectoryData;
-
-    using DevExpress.Blazor;
 
     using global::COMET.Web.Common.Test.Helpers;
 
