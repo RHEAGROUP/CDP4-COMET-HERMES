@@ -42,7 +42,8 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
         private IRenderedComponent<SessionDataComponent> component;
         private bool clickedOnItem;
         private Mock<ISession> mockSession;
-        
+        private string[] siteDirectoryNames;
+        private string[] siteDirectoryTitles;
         [SetUp]
         public void Setup()
         {
@@ -51,6 +52,18 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             this.mockSession = new Mock<ISession>();
             var siteDirectory = new SiteDirectory();
             siteDirectory.Domain.Add(new DomainOfExpertise {  Name = "DomainName1" });
+            siteDirectory.Organization.Add(new Organization {  Name = "OrganizationName1" });
+            siteDirectory.NaturalLanguage.Add(new NaturalLanguage {  Name = "NaturalLanguage1" });
+            siteDirectory.DomainGroup.Add(new DomainOfExpertiseGroup {  Name = "DomainGroup1" });
+            siteDirectory.Model.Add(new EngineeringModelSetup {  Name = "Model1" });
+            siteDirectory.ParticipantRole.Add(new ParticipantRole {  Name = "ParticipantRole1" });
+            siteDirectory.Person.Add(new Person() { GivenName = "PersonName1"});
+            siteDirectory.PersonRole.Add(new PersonRole {  Name = "PersonRole1" });
+            siteDirectory.SiteReferenceDataLibrary.Add(new SiteReferenceDataLibrary {  Name = "SiteReferenceDataLibrary1" });
+
+            this.siteDirectoryNames = new[] { "DomainName1", "OrganizationName1", "NaturalLanguage1", "DomainGroup1", "Model1", "ParticipantRole1", "PersonName1 ", "PersonRole1", "SiteReferenceDataLibrary1" };
+            //Site directory titles are present on the component
+            this.siteDirectoryTitles = new[] { "Domains of Expertise", "Organizations", "Natural Languages", "Domain Groups", "Models", "Participant Roles", "Persons", "Person Roles", "Site Reference Data Library", "Site Directory"};
             this.mockSession.Setup(x => x.RetrieveSiteDirectory()).Returns(siteDirectory);
             
             Action<Thing> action = (_) =>
@@ -68,38 +81,43 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
         public void VerifyComponent()
         {
             var containerTitles = this.component.FindAll(".dxbl-treeview-item-container");
-            Assert.That(containerTitles.Count, Is.EqualTo(2));
+            Assert.That(containerTitles.Count, Is.EqualTo(10));
 
-            var domainOfExpertiseTitle = containerTitles[0];
-            var siteDirectoryTitle = containerTitles[1];
-
-            Assert.Multiple(() =>
+            for (var i = 0; i < containerTitles.Count; i++)
             {
-                Assert.That(domainOfExpertiseTitle.TextContent.Trim(), Is.EqualTo("Domains of Expertise"));
-                Assert.That(siteDirectoryTitle.TextContent.Trim(), Is.EqualTo("Site Directory"));
-                Assert.That(this.clickedOnItem, Is.False);
-            });
-            
-            var btnElement = this.component.Find(".dxbl-btn");
-            Assert.That(btnElement, Is.Not.Null);
-            btnElement.Click();
+                var element = containerTitles[i];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(element, Is.Not.Null);
+                    Assert.That(element.TextContent.Trim(), Is.EqualTo(this.siteDirectoryTitles[i]));
+                    Assert.That(this.clickedOnItem, Is.False);
+                });
+            }
+
+            var btnElements = this.component.FindAll(".dxbl-btn");
+            Assert.That(btnElements.Count, Is.EqualTo(10));
             
             var content = this.component.FindAll(".dxbl-treeview-items-container");
-            Assert.That(content.Count, Is.EqualTo(3));
-
-            var sourceData = this.component.FindAll(".source-data");
-            Assert.That(sourceData.Count, Is.EqualTo(1));
-
-            var firstItem = sourceData[0];
-
-            Assert.Multiple(() =>
+            Assert.That(content.Count, Is.EqualTo(10));
+            
+            for (var i = 0; i < btnElements.Count - 1; i++)
             {
-                Assert.That(firstItem.TextContent, Is.EqualTo("DomainName1"));
-                Assert.That(this.clickedOnItem, Is.False);
-            });
-
-            firstItem.Click();
-            Assert.That(this.clickedOnItem, Is.True);
+                var btnElement = btnElements[i];
+                btnElement.Click();
+                Assert.That(btnElement, Is.Not.Null);
+                var sourceData = this.component.FindAll(".source-data");
+                Assert.That(sourceData.Count, Is.EqualTo(1));
+                var firstItem = sourceData[0];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(firstItem.TextContent, Is.EqualTo(this.siteDirectoryNames[i]));
+                    Assert.That(this.clickedOnItem, Is.False);
+                });
+                firstItem.Click();
+                Assert.That(this.clickedOnItem, Is.True);
+                this.clickedOnItem = false;
+                btnElement.Click();
+            }
         }
     }
 }
