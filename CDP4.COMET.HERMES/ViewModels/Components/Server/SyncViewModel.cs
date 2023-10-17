@@ -41,11 +41,6 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
         /// A target session where the data is being transferred to
         /// </summary>
         public ISession TargetSession { get; set; }
-        
-        /// <summary>
-        /// A list of the currently selected things
-        /// </summary>
-        public IEnumerable<Thing> SelectedThings { get; set; }
 
         /// <summary>
         /// The <see cref="SiteDirectory"/> object to hold the data that we want to transfer to the target server

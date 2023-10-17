@@ -51,13 +51,20 @@ namespace CDP4.COMET.HERMES.Tests.Extensions
                 Assert.That(this.diffItemDto.Name, Is.EqualTo("DomainTest"));
                 Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo("equal"));
             });
-
+            
             this.diffItemDto.DifferenceLevel = DifferenceLevel.CompletelyDifferent;
             Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo("completely-different"));
             this.diffItemDto.DifferenceLevel = DifferenceLevel.PartiallyDifferent;
             Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo("partially-different"));
             this.diffItemDto.DifferenceLevel = null;
             Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo(""));
+            
+            this.diffItemDto.Item = null;
+            Assert.Multiple(() =>
+            {
+                Assert.That(this.diffItemDto.Item, Is.Null);
+                Assert.That(this.diffItemDto.Name, Is.EqualTo(""));
+            });
         }
     }
 }

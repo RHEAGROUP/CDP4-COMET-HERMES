@@ -54,6 +54,11 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
         /// </summary>
         public ISession Session { get; set; }
 
+        /// <summary>
+        /// Retrieves a new <see cref="ISession"/> object based on the current credentials
+        /// </summary>
+        /// <param name="authenticationDto"></param>
+        /// <returns>A new <see cref="ISession"/> object</returns>
         public ISession GetSessionData(AuthenticationDto authenticationDto)
         {
             var credentials = new Credentials(authenticationDto.UserName, authenticationDto.Password, new Uri(authenticationDto.SourceAddress)); 
