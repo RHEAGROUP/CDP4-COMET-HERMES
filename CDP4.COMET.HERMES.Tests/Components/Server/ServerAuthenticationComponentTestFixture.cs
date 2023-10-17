@@ -29,6 +29,8 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     using CDP4Common.SiteDirectoryData;
 
     using CDP4Dal;
+    using CDP4Dal.DAL;
+    using CDP4Dal.Exceptions;
 
     using global::COMET.Web.Common.Model.DTO;
     using global::COMET.Web.Common.Test.Helpers;
@@ -189,6 +191,31 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 Assert.That(renderer.Instance.ErrorMessage, Is.Empty);
                 Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Success));
             });
+            
+            //Test fail states
+            this.sessionMock.Setup(x => x.Open(It.IsAny<bool>())).Throws(new DalReadException());
+            await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
+            Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Fail));
+            Assert.That(this.serverViewModel.Session, Is.Not.Null);
+
+            this.serverViewModel.Session = null;
+            
+            var credentials = new Credentials("user", "pass", new Uri("http://localhost"));
+            await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
+            Assert.Multiple(() =>
+            {
+                Assert.That(this.serverViewModel.Session, Is.Not.Null);
+                Assert.That(this.serverViewModel.Session.Credentials.UserName, Is.EqualTo(credentials.UserName));
+                Assert.That(this.serverViewModel.Session.Credentials.Password, Is.EqualTo(credentials.Password));
+                Assert.That(this.serverViewModel.Session.Credentials.Uri, Is.EqualTo(credentials.Uri));
+                Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Fail));
+            });
+
+            this.serverViewModel.Session = this.sessionMock.Object;
+            this.sessionMock.Setup(x => x.Open(It.IsAny<bool>())).Throws(new HttpRequestException());
+            await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
+            Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.ServerFail));
+
         }
     }
 }

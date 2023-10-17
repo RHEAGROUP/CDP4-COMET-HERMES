@@ -81,12 +81,10 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
             catch (DalReadException)
             {
                 this.AuthenticationState =  AuthenticationStateKind.Fail;
-                this.Session = null;
             }
             catch (HttpRequestException)
             {
                 this.AuthenticationState =  AuthenticationStateKind.ServerFail;
-                this.Session = null;
             }
         }
     }
