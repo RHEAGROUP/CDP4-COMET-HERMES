@@ -4,20 +4,24 @@
 
 @if (this.Source.Any())
 {
-    <DxTreeViewNode Text="@(this.Title)">
+    <DxTreeView>
         <Nodes>
-            <DxTreeViewNode Expanded="@(this.Expanded)">
-                <Template>
-                    <ul>
-                        @foreach (var definedThing in this.Source)
-                        {
-                            <li class="source-data" @onclick="() => this.OnClick.Invoke(definedThing)">
-                                @(((INamedThing)definedThing).Name)
-                            </li>
-                        }
-                    </ul>
-                </Template>
+            <DxTreeViewNode Text="@(this.Title)">
+                <Nodes>
+                    <DxTreeViewNode Expanded="@(this.Expanded)">
+                        <Template>
+                            <ul>
+                                @foreach (var definedThing in this.Source)
+                                {
+                                    <li class="source-data" @onclick="() => this.OnClick.Invoke(definedThing)">
+                                        @(((INamedThing)definedThing).Name)
+                                    </li>
+                                }
+                            </ul>
+                        </Template>
+                    </DxTreeViewNode>
+                </Nodes>
             </DxTreeViewNode>
         </Nodes>
-    </DxTreeViewNode>
+    </DxTreeView>
 }
