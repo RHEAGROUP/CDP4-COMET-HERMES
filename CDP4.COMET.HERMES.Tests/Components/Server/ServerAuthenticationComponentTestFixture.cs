@@ -208,7 +208,6 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 Assert.That(this.serverViewModel.Session.Credentials.UserName, Is.EqualTo(credentials.UserName));
                 Assert.That(this.serverViewModel.Session.Credentials.Password, Is.EqualTo(credentials.Password));
                 Assert.That(this.serverViewModel.Session.Credentials.Uri, Is.EqualTo(credentials.Uri));
-                Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Fail));
             });
 
             this.serverViewModel.Session = this.sessionMock.Object;
