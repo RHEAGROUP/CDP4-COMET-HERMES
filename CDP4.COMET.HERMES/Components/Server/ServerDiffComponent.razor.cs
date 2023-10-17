@@ -111,38 +111,43 @@ namespace CDP4.COMET.HERMES.Components.Server
         {
             var dict = new Dictionary<string, IEnumerable<DiffItemDto>>();
 
-            foreach (var target in this.TargetThings)
+            foreach (var targetThing in this.TargetThings)
             {
+                var target = targetThing.ToList();
                 var targetType = target.GetType();
-                var source = this.SourceThings.FirstOrDefault(x => x.GetType() == targetType);
+                var source = this.SourceThings.FirstOrDefault(x => x.GetType() == targetType)?.ToList() ?? new List<Thing>();
 
-                var DiffItemDtos = target.Select(targetThing =>
+                var diffItemDtos = target.Select(targetThing =>
                 {
-                    var DiffItemDto = new DiffItemDto();
+                    var diffItemDto = new DiffItemDto();
                     var itemInSource = source?.FirstOrDefault(sourceThing => sourceThing.Iid.Equals(targetThing.Iid));
-                    DiffItemDto.Item = targetThing;
-                    DiffItemDto.DifferenceLevel = itemInSource == null ? DifferenceLevel.Equal : this.GetDifferenceDegree(targetThing, itemInSource);
-                    return DiffItemDto;
+                    diffItemDto.Item = targetThing;
+                    diffItemDto.DifferenceLevel = itemInSource == null ? DifferenceLevel.Equal : this.GetDifferenceDegree(targetThing, itemInSource);
+                    return diffItemDto;
                 }).ToList();
                 
-                DiffItemDtos.AddRange(source.Where(x => !target.Any(c => c.Iid == x.Iid)).Select(x =>
+                diffItemDtos.AddRange(source.Where(x => !target.Any(c => c.Iid == x.Iid)).Select(x =>
                 {
-                    var DiffItemDto = new DiffItemDto
+                    var diffItemDto = new DiffItemDto
                     {
                         Item = x,
                         DifferenceLevel = DifferenceLevel.CompletelyDifferent
                     };
-                    return DiffItemDto;
+                    return diffItemDto;
                 }));
 
-                if (!DiffItemDtos.Any())
+                if (!diffItemDtos.Any())
                 {
                     continue;
                 }
                 
                 var targetName = target.FirstOrDefault();
-                var typeName = targetName != null ? target.FirstOrDefault().GetType().Name : source.FirstOrDefault().GetType().Name;
-                dict.Add(typeName, DiffItemDtos);
+                var typeName = targetName != null ? target?.FirstOrDefault()?.GetType().Name : source?.FirstOrDefault()?.GetType().Name;
+
+                if (!string.IsNullOrEmpty(typeName))
+                { 
+                    dict.Add(typeName, diffItemDtos);
+                }
             }
 
             return dict;
@@ -151,12 +156,16 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// <summary>
         /// Gets the diff amount based on the difference levels of the <see cref="DiffItemDto"/> on the list
         /// </summary>
-        /// <param name="DiffItemDtos">The list of DiffItems</param>
+        /// <param name="diffItemDtos">The list of DiffItems</param>
         /// <returns></returns>
-        private string GetDiffValues(IEnumerable<DiffItemDto> DiffItemDtos)
+        private string GetDiffValues(IEnumerable<DiffItemDto> diffItemDtos)
         {
-            var differentItems = DiffItemDtos.Count(x => x.DifferenceLevel is DifferenceLevel.CompletelyDifferent or DifferenceLevel.PartiallyDifferent);
-            var equalItemsCount = DiffItemDtos.Count(x => x.DifferenceLevel is DifferenceLevel.Equal);
+            if (!diffItemDtos.Any())
+            {
+                return "";
+            }
+            var differentItems = diffItemDtos.Count(x => x.DifferenceLevel is DifferenceLevel.CompletelyDifferent or DifferenceLevel.PartiallyDifferent);
+            var equalItemsCount = diffItemDtos.Count(x => x.DifferenceLevel is DifferenceLevel.Equal);
 
             var result = "";
 
@@ -183,10 +192,11 @@ namespace CDP4.COMET.HERMES.Components.Server
         {
             var dict = new Dictionary<string, IEnumerable<DiffItemDto>>();
             
-            foreach (var source in this.SourceThings)
+            foreach (var sourceThing in this.SourceThings)
             {
+                var source = sourceThing.ToList();
                 var sourceType = source?.GetType();
-                var target = this.TargetThings.Select(x => x).FirstOrDefault(x => x.GetType() == sourceType);
+                var target = this.TargetThings.Select(x => x).FirstOrDefault(x => x.GetType() == sourceType)?.ToList();
                 
                 if (target == null || !target.Any())
                 {
