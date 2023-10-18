@@ -16,8 +16,4 @@
         <PackageReference Include="DevExpress.Blazor" Version="23.1.4" />
         <PackageReference Include="ReactiveUI" Version="19.5.1" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Components\Session\" />
-      <Folder Include="Components\Shared\" />
-    </ItemGroup>
 </Project>

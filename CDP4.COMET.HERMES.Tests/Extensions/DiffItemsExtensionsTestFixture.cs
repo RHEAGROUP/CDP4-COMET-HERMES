@@ -23,6 +23,7 @@ namespace CDP4.COMET.HERMES.Tests.Extensions
     using CDP4.COMET.HERMES.Models.DTO;
     using CDP4.COMET.HERMES.Models.Enums;
 
+    using CDP4Common.ReportingData;
     using CDP4Common.SiteDirectoryData;
 
     using NUnit.Framework;
@@ -31,7 +32,7 @@ namespace CDP4.COMET.HERMES.Tests.Extensions
     public class DiffItemsExtensionsTestFixture
     {
         private DiffItemDto diffItemDto;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -51,19 +52,30 @@ namespace CDP4.COMET.HERMES.Tests.Extensions
                 Assert.That(this.diffItemDto.Name, Is.EqualTo("DomainTest"));
                 Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo("equal"));
             });
-            
+
             this.diffItemDto.DifferenceLevel = DifferenceLevel.CompletelyDifferent;
             Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo("completely-different"));
             this.diffItemDto.DifferenceLevel = DifferenceLevel.PartiallyDifferent;
             Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo("partially-different"));
             this.diffItemDto.DifferenceLevel = null;
             Assert.That(this.diffItemDto.GetDiffItemDtoCssClassByDifferenceLevel(), Is.EqualTo(""));
-            
+
             this.diffItemDto.Item = null;
+
             Assert.Multiple(() =>
             {
                 Assert.That(this.diffItemDto.Item, Is.Null);
                 Assert.That(this.diffItemDto.Name, Is.EqualTo(""));
+            });
+
+
+            ///SiteDirectoryDataAnnotation doesn't implement INamedThing
+            this.diffItemDto.Item = new SiteDirectoryDataAnnotation();
+            
+            Assert.Multiple(() =>
+            {
+                Assert.That(this.diffItemDto.Item, Is.Not.Null);
+                Assert.That(this.diffItemDto.Name, Is.EqualTo("User-friendly name not implemented."));
             });
         }
     }

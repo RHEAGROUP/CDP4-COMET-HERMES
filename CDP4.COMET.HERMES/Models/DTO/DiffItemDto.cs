@@ -32,13 +32,15 @@ namespace CDP4.COMET.HERMES.Models.DTO
         /// The <see cref="DifferenceLevel"/> of this particular item
         /// </summary>
         public DifferenceLevel? DifferenceLevel { get; set; }
+        
         /// <summary>
         /// The <see cref="Thing"/> item that holds all of the data
         /// </summary>
         public Thing Item { get; set; }
+
         /// <summary>
         /// The named of the thing, if the <see cref="Item"/> implements an <see cref="INamedThing"/>
         /// </summary>
-        public string Name => this.Item != null ? ((INamedThing)this.Item).Name : "";
+        public string Name => this.Item is null ? "" : (this.Item as INamedThing)?.Name ?? this.Item.UserFriendlyName;
     }
 }

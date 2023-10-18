@@ -34,6 +34,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     using Moq;
 
     using NUnit.Framework;
+
     using TestContext = Bunit.TestContext;
 
     [TestFixture]
@@ -64,7 +65,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             var emptySiteDirectory = ServerComponent.GetThingsFromSiteDirectory(null);
             Assert.That(emptySiteDirectory, Is.Empty);
             var siteDirectory = new SiteDirectory();
-            siteDirectory.Domain.Add(new DomainOfExpertise {  Name = "DomainName1" });
+            siteDirectory.Domain.Add(new DomainOfExpertise { Name = "DomainName1" });
             var nonEmptySiteDirectory = ServerComponent.GetThingsFromSiteDirectory(siteDirectory);
             Assert.That(nonEmptySiteDirectory, Is.Not.Empty);
         }

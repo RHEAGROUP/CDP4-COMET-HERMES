@@ -43,7 +43,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// </summary>
         [Inject]
         public IServerViewModel ViewModel { get; set; }
-        
+
         /// <summary>
         /// An action that is executed when the user successfully authenticates.
         /// </summary>
@@ -70,7 +70,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// Value indicating if the login button is enabled or not
         /// </summary>
         public bool LoginEnabled { get; set; } = true;
-        
+
         /// <summary>
         /// Method invoked when the component is ready to start, having received its
         /// initial parameters from its parent in the render tree.
@@ -78,14 +78,14 @@ namespace CDP4.COMET.HERMES.Components.Server
         protected override void OnInitialized()
         {
             base.OnInitialized();
-                        
+
             this.FieldsFocusedStatus = new Dictionary<string, bool>()
             {
                 { "SourceAddress", false },
                 { "UserName", false },
                 { "Password", false }
             };
-            
+
             this.Disposables.Add(this.WhenAnyValue(x => x.ViewModel.AuthenticationState)
                 .Subscribe(_ => this.ComputeDisplayProperties()));
         }
@@ -112,7 +112,7 @@ namespace CDP4.COMET.HERMES.Components.Server
 
             this.InvokeAsync(this.StateHasChanged);
         }
-        
+
         /// <summary>
         /// Handles the focus event of the given fieldName
         /// </summary>
@@ -130,7 +130,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         {
             this.FieldsFocusedStatus[fieldName] = false; // Set the field as not focused when it loses focus
         }
-        
+
         /// <summary>
         /// Authenticates the user with the given form data
         /// </summary>

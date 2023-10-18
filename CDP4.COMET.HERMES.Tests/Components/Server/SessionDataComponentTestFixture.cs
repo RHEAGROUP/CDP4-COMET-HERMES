@@ -33,6 +33,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     using Moq;
 
     using NUnit.Framework;
+
     using TestContext = Bunit.TestContext;
 
     [TestFixture]
@@ -44,6 +45,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
         private Mock<ISession> mockSession;
         private string[] siteDirectoryNames;
         private string[] siteDirectoryTitles;
+
         [SetUp]
         public void Setup()
         {
@@ -51,25 +53,32 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             this.context.ConfigureDevExpressBlazor();
             this.mockSession = new Mock<ISession>();
             var siteDirectory = new SiteDirectory();
-            siteDirectory.Domain.Add(new DomainOfExpertise {  Name = "DomainName1" });
-            siteDirectory.Organization.Add(new Organization {  Name = "OrganizationName1" });
-            siteDirectory.NaturalLanguage.Add(new NaturalLanguage {  Name = "NaturalLanguage1" });
-            siteDirectory.DomainGroup.Add(new DomainOfExpertiseGroup {  Name = "DomainGroup1" });
-            siteDirectory.Model.Add(new EngineeringModelSetup {  Name = "Model1" });
-            siteDirectory.ParticipantRole.Add(new ParticipantRole {  Name = "ParticipantRole1" });
-            siteDirectory.Person.Add(new Person() { GivenName = "PersonName1"});
-            siteDirectory.PersonRole.Add(new PersonRole {  Name = "PersonRole1" });
-            siteDirectory.SiteReferenceDataLibrary.Add(new SiteReferenceDataLibrary {  Name = "SiteReferenceDataLibrary1" });
+            siteDirectory.Domain.Add(new DomainOfExpertise { Name = "DomainName1" });
+            siteDirectory.Organization.Add(new Organization { Name = "OrganizationName1" });
+            siteDirectory.NaturalLanguage.Add(new NaturalLanguage { Name = "NaturalLanguage1" });
+            siteDirectory.DomainGroup.Add(new DomainOfExpertiseGroup { Name = "DomainGroup1" });
+            siteDirectory.Model.Add(new EngineeringModelSetup { Name = "Model1" });
+            siteDirectory.ParticipantRole.Add(new ParticipantRole { Name = "ParticipantRole1" });
+            siteDirectory.Person.Add(new Person() { GivenName = "PersonName1" });
+            siteDirectory.PersonRole.Add(new PersonRole { Name = "PersonRole1" });
+            siteDirectory.SiteReferenceDataLibrary.Add(new SiteReferenceDataLibrary { Name = "SiteReferenceDataLibrary1" });
 
-            this.siteDirectoryNames = new[] { "DomainName1", "OrganizationName1", "NaturalLanguage1", "DomainGroup1", "Model1", "ParticipantRole1", "PersonName1 ", "PersonRole1", "SiteReferenceDataLibrary1" };
-            //Site directory titles are present on the component
-            this.siteDirectoryTitles = new[] { "Domains of Expertise", "Organizations", "Natural Languages", "Domain Groups", "Models", "Participant Roles", "Persons", "Person Roles", "Site Reference Data Library", "Site Directory"};
-            this.mockSession.Setup(x => x.RetrieveSiteDirectory()).Returns(siteDirectory);
-            
-            Action<Thing> action = (_) =>
+            this.siteDirectoryNames = new[]
             {
-                this.clickedOnItem = true;
+                "DomainName1", "OrganizationName1", "NaturalLanguage1", "DomainGroup1", "Model1", "ParticipantRole1", "PersonName1 ", "PersonRole1", "SiteReferenceDataLibrary1"
             };
+
+            //Site directory titles are present on the component
+            this.siteDirectoryTitles = new[]
+            {
+                "Domains of Expertise", "Organizations", "Natural Languages", "Domain Groups", "Models", "Participant Roles", "Persons", "Person Roles",
+                "Site Reference Data Library", "Site Directory"
+            };
+
+            this.mockSession.Setup(x => x.RetrieveSiteDirectory()).Returns(siteDirectory);
+
+            Action<Thing> action = (_) => { this.clickedOnItem = true; };
+
             this.component = this.context.RenderComponent<SessionDataComponent>(parameters =>
             {
                 parameters.Add(p => p.OnClick, action);
@@ -86,6 +95,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             for (var i = 0; i < containerTitles.Count; i++)
             {
                 var element = containerTitles[i];
+
                 Assert.Multiple(() =>
                 {
                     Assert.That(element, Is.Not.Null);
@@ -96,10 +106,10 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
 
             var btnElements = this.component.FindAll(".dxbl-btn");
             Assert.That(btnElements.Count, Is.EqualTo(10));
-            
+
             var content = this.component.FindAll(".dxbl-treeview-items-container");
             Assert.That(content.Count, Is.EqualTo(10));
-            
+
             for (var i = 0; i < btnElements.Count - 1; i++)
             {
                 var btnElement = btnElements[i];
@@ -108,11 +118,13 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 var sourceData = this.component.FindAll(".source-data");
                 Assert.That(sourceData.Count, Is.EqualTo(1));
                 var firstItem = sourceData[0];
+
                 Assert.Multiple(() =>
                 {
                     Assert.That(firstItem.TextContent, Is.EqualTo(this.siteDirectoryNames[i]));
                     Assert.That(this.clickedOnItem, Is.False);
                 });
+
                 firstItem.Click();
                 Assert.That(this.clickedOnItem, Is.True);
                 this.clickedOnItem = false;

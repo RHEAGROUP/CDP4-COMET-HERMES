@@ -56,7 +56,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         {
             base.OnInitialized();
 
-            if (Session != null)
+            if (this.Session != null)
             {
                 this.currentSessionSiteDirectory = this.Session.RetrieveSiteDirectory();
             }

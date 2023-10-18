@@ -31,7 +31,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     using global::COMET.Web.Common.Test.Helpers;
 
     using NUnit.Framework;
-    
+
     using TestContext = Bunit.TestContext;
 
     [TestFixture]
@@ -40,13 +40,13 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
         private TestContext context;
         private IRenderedComponent<SourceDataComponent<Thing>> component;
         private bool clickedOnItem;
-        
+
         [SetUp]
         public void Setup()
         {
             this.context = new TestContext();
             this.context.ConfigureDevExpressBlazor();
-            
+
             var things = new List<Thing>
             {
                 new DomainOfExpertise
@@ -61,10 +61,8 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 },
             };
 
-            Action<Thing> action = (_) =>
-            {
-                this.clickedOnItem = true;
-            };
+            Action<Thing> action = (_) => { this.clickedOnItem = true; };
+
             this.component = this.context.RenderComponent<SourceDataComponent<Thing>>(parameters =>
             {
                 parameters.Add(p => p.Expanded, true);
@@ -79,7 +77,6 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
         {
             this.context.CleanContext();
         }
-
 
         [Test]
         public void VerifyComponent()
@@ -113,6 +110,5 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             firstItem.Click();
             Assert.That(this.clickedOnItem, Is.True);
         }
-        
     }
 }

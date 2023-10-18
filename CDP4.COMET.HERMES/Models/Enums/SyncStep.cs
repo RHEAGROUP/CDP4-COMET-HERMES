@@ -19,9 +19,19 @@
 
 namespace CDP4.COMET.HERMES.Models.Enums
 {
+    /// <summary>
+    /// An enumeration data type that defines the current step of the synchronization step the user is in
+    /// </summary>
     public enum SyncStep
     {
+        /// <summary>
+        /// Indicates that the user is in the authentication phase
+        /// </summary>
         Authentication,
+        
+        /// <summary>
+        /// Indicates that the user is in the data source picking phase (selection of data to be synced)
+        /// </summary>
         DataSourcePicking
     }
 }

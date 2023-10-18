@@ -36,18 +36,22 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server.Interfaces
         /// <param name="authenticationDto"></param>
         /// <returns>A new <see cref="ISession"/> object</returns>
         ISession GetSessionData(AuthenticationDto authenticationDto);
+        
         /// <summary>
         /// Creates a new session with the given credentials
         /// </summary>
         Task Authenticate();
+        
         /// <summary>
         /// The <see cref="AuthenticationDto" /> used for perfoming a login
         /// </summary>
         AuthenticationDto AuthenticationDto { get; set; }
+        
         /// <summary>
         /// Gets or sets the <see cref="AuthenticationStateKind" />
         /// </summary>
         AuthenticationStateKind? AuthenticationState { get; set; }
+        
         /// <summary>
         /// Gets or sets the <see cref="ISession" />
         /// </summary>

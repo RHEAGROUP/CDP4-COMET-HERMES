@@ -19,10 +19,24 @@
 
 namespace CDP4.COMET.HERMES.Models.Enums
 {
+    /// <summary>
+    /// An enumeration data type that defines the possible levels of difference between data sets
+    /// </summary>
     public enum DifferenceLevel
     {
+        /// <summary>
+        /// Indicates that the compared data set is equal
+        /// </summary>
         Equal,
+        
+        /// <summary>
+        ///Indicates that the compared data set is partially different
+        /// </summary>
         PartiallyDifferent,
+        
+        /// <summary>
+        /// Indicates that the compared data set is completely different
+        /// </summary>
         CompletelyDifferent
     }
 }

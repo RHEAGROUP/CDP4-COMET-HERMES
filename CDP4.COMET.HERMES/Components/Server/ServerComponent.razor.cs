@@ -43,27 +43,51 @@ namespace CDP4.COMET.HERMES.Components.Server
     /// </summary>
     public partial class ServerComponent
     {
+        /// <summary>
+        /// The ViewModel associated with the sync feature, which will store all the data related to what needs to be synced
+        /// </summary>
         [Inject]
         public ISyncViewModel SyncViewModel { get; set; }
-        
-        /// <summary>
-        /// Method invoked when the component is ready to start, having received its
-        /// initial parameters from its parent in the render tree.
-        /// </summary>
-        /// 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            this.SyncViewModel.SelectedSiteDirectory = new();
-        }
 
+        /// <summary>
+        /// Reetrieves all the different things from within a <see cref="SiteDirectory"/> object
+        /// </summary>
+        /// <param name="siteDirectory"></param>
+        /// <returns>A list of lists of Things></returns>
         public static IEnumerable<IEnumerable<Thing>> GetThingsFromSiteDirectory(SiteDirectory siteDirectory)
         {
             if (siteDirectory == null)
             {
                 return Enumerable.Empty<IEnumerable<Thing>>();
             }
+
             return siteDirectory.ContainerLists.Select(x => (IEnumerable<Thing>)x);
+        }
+
+        /// <summary>
+        /// Sets the new session onto the view model
+        /// </summary>
+        /// <param name="session">The new session that is going to be set</param>
+        /// <param name="isSourceSession">A bit that defines if we're setting a source or a target. Default is true.</param>
+        public void SetSession(ISession session, bool isSourceSession = true)
+        {
+            if (isSourceSession)
+            { 
+                this.SyncViewModel.SourceSession = session;
+            }
+            else
+            {
+                this.SyncViewModel.TargetSession = session;
+            }
+
+            var isOppositeSessionSet = isSourceSession ? this.SyncViewModel.TargetSession != null : this.SyncViewModel.SourceSession != null;
+
+            if (isOppositeSessionSet)
+            {
+                this.SyncViewModel.CurrentSyncStep++;
+            }
+
+            this.StateHasChanged();
         }
     }
 }

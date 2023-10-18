@@ -42,16 +42,16 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     using Moq;
 
     using NUnit.Framework;
-    
+
     using TestContext = Bunit.TestContext;
-    
+
     [TestFixture]
     public class ServerAuthenticationComponentTestFixture
     {
         private TestContext context;
         private Mock<ISession> sessionMock;
         private IServerViewModel serverViewModel;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -64,13 +64,13 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             this.context.Services.AddSingleton(this.serverViewModel);
             this.context.ConfigureDevExpressBlazor();
         }
-        
+
         [TearDown]
         public void Teardown()
         {
             this.context.CleanContext();
         }
-        
+
         [Test]
         public async Task VerifyErrorsShown()
         {
@@ -100,7 +100,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 Assert.That(errorsElement.ChildElementCount, Is.EqualTo(numberOfRequiredFieldsInFirstLoginTry));
             });
         }
-        
+
         [Test]
         public void VerifyFocusingAndBluring()
         {
@@ -116,8 +116,8 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             const string fieldToFocusOn = "UserName";
             Assert.That(renderer.Instance.FieldsFocusedStatus[fieldToFocusOn], Is.False);
             renderer.Instance.HandleFieldFocus(fieldToFocusOn);
-            
-            Assert.Multiple(()=>
+
+            Assert.Multiple(() =>
             {
                 foreach (var fieldStatus in renderer.Instance.FieldsFocusedStatus)
                 {
@@ -135,7 +135,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 }
             });
         }
-        
+
         [Test]
         public async Task VerifyPerformLogin()
         {
@@ -151,39 +151,33 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
 
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(renderer.Instance.ErrorMessage, Is.Not.Null);
-            });
+            Assert.Multiple(() => { Assert.That(renderer.Instance.ErrorMessage, Is.Not.Null); });
 
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(renderer.Instance.ErrorMessage, Is.Not.Null);
-            });
+            Assert.Multiple(() => { Assert.That(renderer.Instance.ErrorMessage, Is.Not.Null); });
 
             this.serverViewModel.AuthenticationDto = new AuthenticationDto
             {
                 UserName = "user",
                 Password = "pass"
             };
-            
+
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
-            
+
             Assert.Multiple(() =>
             {
                 Assert.That(renderer.Instance.ErrorMessage, Is.Not.Null);
                 Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Fail));
             });
-            
+
             this.serverViewModel.AuthenticationDto = new AuthenticationDto
             {
                 SourceAddress = "http://localhost",
                 UserName = "user",
                 Password = "pass"
             };
-            
+
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
 
             Assert.Multiple(() =>
@@ -191,17 +185,22 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
                 Assert.That(renderer.Instance.ErrorMessage, Is.Empty);
                 Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Success));
             });
-            
+
             //Test fail states
             this.sessionMock.Setup(x => x.Open(It.IsAny<bool>())).Throws(new DalReadException());
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
-            Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Fail));
-            Assert.That(this.serverViewModel.Session, Is.Not.Null);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.Fail));
+                Assert.That(this.serverViewModel.Session, Is.Not.Null);
+            });
 
             this.serverViewModel.Session = null;
-            
+
             var credentials = new Credentials("user", "pass", new Uri("http://localhost"));
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
+
             Assert.Multiple(() =>
             {
                 Assert.That(this.serverViewModel.Session, Is.Not.Null);
@@ -214,7 +213,6 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             this.sessionMock.Setup(x => x.Open(It.IsAny<bool>())).Throws(new HttpRequestException());
             await renderer.InvokeAsync(editForm.Instance.OnValidSubmit.InvokeAsync);
             Assert.That(this.serverViewModel.AuthenticationState, Is.EqualTo(AuthenticationStateKind.ServerFail));
-
         }
     }
 }

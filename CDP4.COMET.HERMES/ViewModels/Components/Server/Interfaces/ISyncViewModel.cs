@@ -34,14 +34,17 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server.Interfaces
         /// The source session where the data being selected from
         /// </summary>
         ISession SourceSession { get; set; }
+        
         /// <summary>
         /// A target session where the data is being transferred to
         /// </summary>
         ISession TargetSession { get; set; }
+        
         /// <summary>
         /// Defines the current step the user is at in the sync process
         /// </summary>
         SyncStep CurrentSyncStep { get; set; }
+
         /// <summary>
         /// The <see cref="SiteDirectory"/> object to hold the data that we want to transfer to the target server
         /// </summary>

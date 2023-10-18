@@ -45,7 +45,7 @@ namespace CDP4.COMET.HERMES.ViewModels.Components.Server
         /// <summary>
         /// The <see cref="SiteDirectory"/> object to hold the data that we want to transfer to the target server
         /// </summary>
-        public SiteDirectory SelectedSiteDirectory { get; set; }
+        public SiteDirectory SelectedSiteDirectory { get; set; } = new();
         
         /// <summary>
         /// Defines the current step the user is at in the sync process

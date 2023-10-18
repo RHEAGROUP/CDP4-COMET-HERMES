@@ -28,7 +28,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     using global::COMET.Web.Common.Test.Helpers;
 
     using NUnit.Framework;
-    
+
     using TestContext = Bunit.TestContext;
 
     [TestFixture]
@@ -36,7 +36,7 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
     {
         private TestContext context;
         private IRenderedComponent<ServerDiffComponent> component;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -44,9 +44,9 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
             this.context.ConfigureDevExpressBlazor();
 
             var commonGuid = Guid.NewGuid();
-            var sourceThings = new[] { new List<DomainOfExpertise> { new() { Iid = commonGuid, Name = "Domain1" }, new() { Iid = Guid.NewGuid(), Name = "Domain2" } }};
-            var targetThings = new[] { new List<DomainOfExpertise> { new() { Iid = commonGuid, Name = "Domain1" }, new() { Iid = Guid.NewGuid(), Name = "Domain2-Target"} }};
-            
+            var sourceThings = new[] { new List<DomainOfExpertise> { new() { Iid = commonGuid, Name = "Domain1" }, new() { Iid = Guid.NewGuid(), Name = "Domain2" } } };
+            var targetThings = new[] { new List<DomainOfExpertise> { new() { Iid = commonGuid, Name = "Domain1" }, new() { Iid = Guid.NewGuid(), Name = "Domain2-Target" } } };
+
             this.component = this.context.RenderComponent<ServerDiffComponent>(parameters =>
             {
                 parameters.Add(p => p.SourceThings, sourceThings);
@@ -59,17 +59,20 @@ namespace CDP4.COMET.HERMES.Tests.Components.Server
         {
             var content = this.component.FindAll(".dxbl-treeview-items-container");
             Assert.That(content.Count, Is.EqualTo(2));
-            
+
             var domainOfExpertiseContainer = content[1];
+
             Assert.Multiple(() =>
             {
                 Assert.That(domainOfExpertiseContainer.TextContent.Trim(), Is.EqualTo("DomainOfExpertise (+1, =1)"));
                 Assert.That(this.component.Instance.ShowAllResults, Is.False);
             });
+
             this.component.Instance.ShowAllResults = true;
             this.component.Render();
 
             domainOfExpertiseContainer = this.component.FindAll(".dxbl-treeview-items-container")[1];
+
             Assert.Multiple(() =>
             {
                 Assert.That(domainOfExpertiseContainer, Is.Not.Null);

@@ -46,12 +46,12 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// </summary>
         [Parameter]
         public IEnumerable<IEnumerable<Thing>> TargetThings { get; set; }
-        
+
         /// <summary>
         /// A toggle property that says if we're only showing the different results or all of them
         /// </summary>
         public bool ShowAllResults { get; set; } = false;
-        
+
         /// <summary>
         /// Method invoked when the component is ready to start, having received its
         /// initial parameters from its parent in the render tree.
@@ -65,8 +65,8 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// <summary>
         /// Calculate the level of difference between a source thing and a target thing
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
+        /// <param name="source">A source of type <see cref="Thing"/></param>
+        /// <param name="target">A target of type <see cref="Thing"/></param>
         /// <returns>
         /// <see cref="DifferenceLevel.Equal"/> when the two things are completely equal <br/>
         /// <see cref="DifferenceLevel.PartiallyDifferent"/> when the two things have equal Iids but their Alias, Hyperlinks and Definitions do not match <br/>
@@ -77,6 +77,7 @@ namespace CDP4.COMET.HERMES.Components.Server
             var sourceDefinedThing = source as DefinedThing;
             var targetDefinedThing = target as DefinedThing;
             var isEqualIid = source.Iid == target.Iid;
+
             if (!isEqualIid && (sourceDefinedThing == null || targetDefinedThing == null))
             {
                 return DifferenceLevel.CompletelyDifferent;
@@ -84,10 +85,13 @@ namespace CDP4.COMET.HERMES.Components.Server
 
             if (isEqualIid && (sourceDefinedThing != null && targetDefinedThing != null))
             {
-
                 var hasEqualAlias = sourceDefinedThing.Alias.All(sourceAlias => targetDefinedThing.Alias.Any(targetAlias => targetAlias.Iid.Equals(sourceAlias.Iid)));
-                var hasEqualHyperlinks = sourceDefinedThing.HyperLink.All(sourceHyperlink => targetDefinedThing.HyperLink.Any(targetHyperlink => targetHyperlink.Iid.Equals(sourceHyperlink.Iid)));
-                var hasEqualDefinition = sourceDefinedThing.Definition.All(sourceDefinition => targetDefinedThing.Definition.Any(targetDefinition => targetDefinition.Iid.Equals(sourceDefinition.Iid)));
+
+                var hasEqualHyperlinks = sourceDefinedThing.HyperLink.All(sourceHyperlink =>
+                    targetDefinedThing.HyperLink.Any(targetHyperlink => targetHyperlink.Iid.Equals(sourceHyperlink.Iid)));
+
+                var hasEqualDefinition = sourceDefinedThing.Definition.All(sourceDefinition =>
+                    targetDefinedThing.Definition.Any(targetDefinition => targetDefinition.Iid.Equals(sourceDefinition.Iid)));
 
                 if (hasEqualAlias && hasEqualHyperlinks && hasEqualDefinition)
                 {
@@ -106,7 +110,7 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// <summary>
         /// Gets all of the items from the target server plus the new items being added
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A KeyValuePair collection of a given key (the type of Thing) and a list of <see cref="DiffItemDto"/></returns>
         private Dictionary<string, IEnumerable<DiffItemDto>> GetAllItems()
         {
             var dict = new Dictionary<string, IEnumerable<DiffItemDto>>();
@@ -124,7 +128,7 @@ namespace CDP4.COMET.HERMES.Components.Server
                     diffItemDto.DifferenceLevel = itemInSource == null ? DifferenceLevel.Equal : GetDifferenceDegree(targetThing, itemInSource);
                     return diffItemDto;
                 }).ToList();
-                
+
                 diffItemDtos.AddRange(source.Where(x => !target.Any(c => c.Iid == x.Iid)).Select(x =>
                 {
                     var diffItemDto = new DiffItemDto
@@ -132,6 +136,7 @@ namespace CDP4.COMET.HERMES.Components.Server
                         Item = x,
                         DifferenceLevel = DifferenceLevel.CompletelyDifferent
                     };
+
                     return diffItemDto;
                 }));
 
@@ -139,12 +144,12 @@ namespace CDP4.COMET.HERMES.Components.Server
                 {
                     continue;
                 }
-                
+
                 var targetName = target.FirstOrDefault();
                 var typeName = targetName != null ? target?.FirstOrDefault()?.GetType().Name : source?.FirstOrDefault()?.GetType().Name;
 
                 if (!string.IsNullOrEmpty(typeName))
-                { 
+                {
                     dict.Add(typeName, diffItemDtos);
                 }
             }
@@ -156,13 +161,14 @@ namespace CDP4.COMET.HERMES.Components.Server
         /// Gets the diff amount based on the difference levels of the <see cref="DiffItemDto"/> on the list
         /// </summary>
         /// <param name="diffItemDtos">The list of DiffItems</param>
-        /// <returns></returns>
+        /// <returns>A KeyValuePair collection of a given key (the type of Thing) and a list of &lt;see cref="DiffItemDto"/&gt;</returns>
         private static string GetDiffValues(IEnumerable<DiffItemDto> diffItemDtos)
         {
             if (!diffItemDtos.Any())
             {
                 return "";
             }
+
             var differentItems = diffItemDtos.Count(x => x.DifferenceLevel is DifferenceLevel.CompletelyDifferent or DifferenceLevel.PartiallyDifferent);
             var equalItemsCount = diffItemDtos.Count(x => x.DifferenceLevel is DifferenceLevel.Equal);
 
@@ -180,7 +186,7 @@ namespace CDP4.COMET.HERMES.Components.Server
 
             return result;
         }
-        
+
         /// <summary>
         /// Enumerates through the list of selected values and calculate a corresponding difference level per item
         /// </summary>
@@ -190,20 +196,21 @@ namespace CDP4.COMET.HERMES.Components.Server
         private Dictionary<string, IEnumerable<DiffItemDto>> GetDiffItemDtos()
         {
             var dict = new Dictionary<string, IEnumerable<DiffItemDto>>();
-            
+
             foreach (var source in this.SourceThings)
             {
                 var sourceType = source.GetType();
                 var target = this.TargetThings.Select(x => x).FirstOrDefault(x => x.GetType() == sourceType)?.ToList();
-                
+
                 if (target == null || !target.Any())
                 {
                     continue;
                 }
-                
+
                 var diff = source.Select(sourceThing =>
                 {
                     var itemInTarget = target.FirstOrDefault(targetThing => targetThing.Iid.Equals(sourceThing.Iid));
+
                     var diffItemDto = new DiffItemDto
                     {
                         Item = sourceThing,
@@ -212,7 +219,7 @@ namespace CDP4.COMET.HERMES.Components.Server
 
                     return diffItemDto;
                 }).ToList();
-                
+
                 if (!diff.Any())
                 {
                     continue;

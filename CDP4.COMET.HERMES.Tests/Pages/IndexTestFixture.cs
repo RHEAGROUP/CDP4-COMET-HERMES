@@ -62,6 +62,7 @@ namespace CDP4.COMET.HERMES.Tests.Pages
         public void Teardown()
         {
             this.context.Dispose();
+            this.context.CleanContext();
         }
 
         [Test]
