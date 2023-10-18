@@ -19,7 +19,6 @@
 
 namespace CDP4.COMET.HERMES.Models.Enums
 {
-    
     /// <summary>
     /// An enumeration datatype that defines the possible kinds of authentication state
     /// </summary>
