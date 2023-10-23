@@ -1,0 +1,84 @@
+<!------------------------------------------------------------------------------
+// Copyright (c) 2023 RHEA System S.A.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+------------------------------------------------------------------------------->
+@namespace CDP4.COMET.HERMES.Components.Server
+@using CDP4.COMET.HERMES.Models.Enums
+@using CDP4Common.SiteDirectoryData
+@using DevExpress.Blazor.Internal
+@using System.Collections
+@using CDP4Common.CommonData
+@inherits CDP4.COMET.HERMES.Components.Shared.DisposableComponent
+
+<div>
+    @if (this.SyncViewModel.SourceSession != null && this.SyncViewModel.TargetSession == null)
+    {
+        <span>You are currently connected to source: @this.SyncViewModel.SourceSession.DataSourceUri</span>
+    }
+    else if (this.SyncViewModel.SourceSession == null && this.SyncViewModel.TargetSession != null)
+    {
+        <span>You are currently connected to target: @this.SyncViewModel.TargetSession.DataSourceUri</span>
+    }
+    else if (this.SyncViewModel.SourceSession != null && this.SyncViewModel.TargetSession != null)
+    {
+        <span>You are currently connected to source @this.SyncViewModel.SourceSession.DataSourceUri and target @this.SyncViewModel.TargetSession.DataSourceUri</span>
+    }
+    else
+    {
+        <span>Please connect to a source server or upload a zip file.</span>
+    }
+</div>
+
+<div class="server">
+    @if (this.SyncViewModel.CurrentSyncStep is SyncStep.Authentication)
+    {
+        <div class="data">
+            @if (this.SyncViewModel.SourceSession != null)
+            {
+                <span>Awaiting authentication on the target server..</span>
+            }
+            else
+            {
+                <h5>Login onto your source server</h5>
+                <ServerAuthenticationComponent OnAuthenticate="@(session => { this.SetSession(session); })"/>
+            }
+        </div>
+        <div class="data">
+            @if (this.SyncViewModel.TargetSession != null)
+            {
+                <span>Awaiting authentication on the source server..</span>
+            }
+            else
+            {
+                <h5>Login onto your target server</h5>
+                <ServerAuthenticationComponent OnAuthenticate="@(session => { this.SetSession(session, false); })"/>
+            }
+        </div>
+    }
+
+    @if (this.SyncViewModel.CurrentSyncStep is SyncStep.DataSourcePicking)
+    {
+        <div class="data">
+            <h5>Source server data</h5>
+            <SessionDataComponent Session="@(this.SyncViewModel.SourceSession)"/>
+        </div>
+        <div class="data">
+            <ServerDiffComponent SourceThings="@(GetThingsFromSiteDirectory(this.SyncViewModel?.SourceSession?.RetrieveSiteDirectory()))" TargetThings="@(GetThingsFromSiteDirectory(this.SyncViewModel?.TargetSession?.RetrieveSiteDirectory()))"/>
+        </div>
+        <div class="data">
+            <h5>Target server data</h5>
+            <SessionDataComponent Session="@(this.SyncViewModel.TargetSession)"/>
+        </div>
+    }
+</div>

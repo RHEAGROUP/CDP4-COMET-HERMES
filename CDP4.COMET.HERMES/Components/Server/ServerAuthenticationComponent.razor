@@ -1,0 +1,98 @@
+﻿<!------------------------------------------------------------------------------
+// Copyright (c) 2023 RHEA System S.A.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+------------------------------------------------------------------------------->
+@namespace CDP4.COMET.HERMES.Components.Server
+@inherits CDP4.COMET.HERMES.Components.Shared.DisposableComponent
+
+<EditForm Context="editFormContext" Model="@this.ViewModel.AuthenticationDto" OnValidSubmit="@this.Authenticate">
+    <DataAnnotationsValidator/>
+    <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+        <DxFormLayoutItem Caption="Source Address:" ColSpanLg="12">
+            <Template>
+                <DxTextBox Id="sourceaddress" @bind-Text="@(this.ViewModel.AuthenticationDto.SourceAddress)"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                           NullText="Enter the url for the server"
+                           BindValueMode="BindValueMode.OnInput"
+                           @onfocus="@(() => this.HandleFieldFocus("SourceAddress"))"
+                           @onblur="@(() => this.HandleFieldBlur("SourceAddress"))"/>
+            </Template>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Caption="UserName:" BeginRow="true" ColSpanLg="12">
+            <Template>
+                <DxTextBox Id="username" @bind-Text="@(this.ViewModel.AuthenticationDto.UserName)"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                           NullText="Enter your username"
+                           BindValueMode="BindValueMode.OnInput"
+                           @onfocus="@(() => this.HandleFieldFocus("UserName"))"
+                           @onblur="@(() => this.HandleFieldBlur("UserName"))"/>
+            </Template>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Caption="Password:" BeginRow="true" ColSpanLg="12">
+            <Template>
+                <DxTextBox Id="password" @bind-Text="@(this.ViewModel.AuthenticationDto.Password)"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                           NullText="Enter your password"
+                           BindValueMode="BindValueMode.OnInput"
+                           @onfocus="@(() => this.HandleFieldFocus("Password"))"
+                           @onblur="@(() => this.HandleFieldBlur("Password"))"
+                           Password="true"/>
+            </Template>
+        </DxFormLayoutItem>
+    </DxFormLayout>
+
+    <ul class="validation-errors">
+        @foreach (var fieldFocusedStatus in this.FieldsFocusedStatus)
+        {
+            if (fieldFocusedStatus.Value)
+            {
+                continue;
+            }
+
+            @if (fieldFocusedStatus.Key == "SourceAddress" && !string.IsNullOrEmpty(editFormContext.GetValidationMessages(() => this.ViewModel.AuthenticationDto.SourceAddress).FirstOrDefault()))
+            {
+                <li class="validation-message">
+                    <ValidationMessage For="() => this.ViewModel.AuthenticationDto.SourceAddress"/>
+                </li>
+            }
+
+            @if (fieldFocusedStatus.Key == "UserName" && !string.IsNullOrEmpty(editFormContext.GetValidationMessages(() => this.ViewModel.AuthenticationDto.UserName).FirstOrDefault()))
+            {
+                <li class="validation-message">
+                    <ValidationMessage For="() => this.ViewModel.AuthenticationDto.UserName"/>
+                </li>
+            }
+
+            @if (fieldFocusedStatus.Key == "Password" && !string.IsNullOrEmpty(editFormContext.GetValidationMessages(() => this.ViewModel.AuthenticationDto.Password).FirstOrDefault()))
+            {
+                <li class="validation-message">
+                    <ValidationMessage For="() => this.ViewModel.AuthenticationDto.Password"/>
+                </li>
+            }
+        }
+    </ul>
+
+    @if (!string.IsNullOrEmpty(this.ErrorMessage))
+    {
+        <div class="form-group row m-top-10px">
+            <label class="text-danger">@this.ErrorMessage</label>
+        </div>
+    }
+
+    <div class="modal-footer">
+        <DxButton Id="connectbtn" Text="@(this.LoginButtonDisplayText)" CssClass="btn btn-connect"
+                  Enabled="@this.LoginEnabled"
+                  SubmitFormOnClick="true"/>
+    </div>
+</EditForm>

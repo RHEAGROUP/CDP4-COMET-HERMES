@@ -23,7 +23,11 @@ namespace CDP4.COMET.HERMES.Tests.Pages
 
     using CDP4.COMET.HERMES.Pages;
     using CDP4.COMET.HERMES.Services.VersionService;
+    using CDP4.COMET.HERMES.ViewModels.Components.Server;
+    using CDP4.COMET.HERMES.ViewModels.Components.Server.Interfaces;
     using CDP4.COMET.HERMES.ViewModels.Pages;
+
+    using global::COMET.Web.Common.Test.Helpers;
 
     using Microsoft.Extensions.DependencyInjection;
 
@@ -49,12 +53,16 @@ namespace CDP4.COMET.HERMES.Tests.Pages
             this.indexViewModel.Setup(x => x.VersionService).Returns(this.versionService.Object);
             this.versionService.Setup(x => x.GetVersion()).Returns("0.0.1.0");
             this.context.Services.AddSingleton(this.indexViewModel.Object);
+            this.context.Services.AddTransient<IServerViewModel, ServerViewModel>();
+            this.context.Services.AddSingleton<ISyncViewModel, SyncViewModel>();
+            this.context.ConfigureDevExpressBlazor();
         }
 
         [TearDown]
         public void Teardown()
         {
             this.context.Dispose();
+            this.context.CleanContext();
         }
 
         [Test]

@@ -20,6 +20,8 @@
 namespace CDP4.COMET.HERMES.Extensions
 {
     using CDP4.COMET.HERMES.Services.VersionService;
+    using CDP4.COMET.HERMES.ViewModels.Components.Server;
+    using CDP4.COMET.HERMES.ViewModels.Components.Server.Interfaces;
     using CDP4.COMET.HERMES.ViewModels.Pages;
 
     /// <summary>
@@ -43,6 +45,8 @@ namespace CDP4.COMET.HERMES.Extensions
         public static void RegisterHermesViewModels(this IServiceCollection services)
         {
             services.AddTransient<IIndexViewModel, IndexViewModel>();
+            services.AddTransient<IServerViewModel, ServerViewModel>();
+            services.AddSingleton<ISyncViewModel, SyncViewModel>();
         }
     }
 }
